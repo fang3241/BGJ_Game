@@ -297,7 +297,7 @@ public class Generator2D : MonoBehaviour {
             }
         }
         GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y - 0.12f) * scaling), Quaternion.identity);
-        _player.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+        _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.75f, scaling * 0.75f);
         camera.GetComponent<CameraMovement>()._target = _player.transform;
 
     }
@@ -549,7 +549,7 @@ public class Generator2D : MonoBehaviour {
         go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
     }
     void placeBorder(Vector2Int location, Vector2 size, Sprite material){
-        GameObject go = Instantiate(border, new Vector2(location.x * scaling, (location.y + 0.5f) * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(border, new Vector2(location.x * scaling, (location.y) * scaling), Quaternion.identity, wallParent);
         go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
         //go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
     }

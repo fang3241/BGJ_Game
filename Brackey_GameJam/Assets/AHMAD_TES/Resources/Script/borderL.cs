@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class borderU : MonoBehaviour
+public class borderL : MonoBehaviour
 {
     //public string collisionTag = "Border";
 
     // Define the value you want to change in the parent
-    public bool hitU;
+    public bool hitL;
 
     void Start()
     {
         // Store the original value
-        //hitU = transform.parent.GetComponent<PlayerMovement>().hitU; // Replace YourParentScript and hitU with your actual script and value names
+        //hitL = transform.parent.GetComponent<PlayerMovement>().hitL; // Replace YourParentScript and hitL with your actual script and value names
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -20,7 +20,7 @@ public class borderU : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and change its value
-            transform.parent.GetComponent<PlayerMovement>().hitU = true; // Replace YourParentScript and hitU with your actual script and value names
+            transform.parent.GetComponent<PlayerMovement>().hitL = true; // Replace YourParentScript and hitL with your actual script and value names
         }
     }
 
@@ -31,7 +31,7 @@ public class borderU : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and change its value
-            transform.parent.GetComponent<PlayerMovement>().hitU = true; // Replace YourParentScript and hitU with your actual script and value names
+            transform.parent.GetComponent<PlayerMovement>().hitL = true; // Replace YourParentScript and hitL with your actual script and value names
         }
     }
 
@@ -42,7 +42,7 @@ public class borderU : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and reset its value
-            transform.parent.GetComponent<PlayerMovement>().hitU = false; // Replace YourParentScript and hitU with your actual script and value names
+            transform.parent.GetComponent<PlayerMovement>().hitL = false; // Replace YourParentScript and hitL with your actual script and value names
         }
     }
 }

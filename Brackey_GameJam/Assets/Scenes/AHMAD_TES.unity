@@ -354,7 +354,7 @@ MonoBehaviour:
   roomMinSize: {x: 2, y: 2}
   cubePrefab: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
   floor: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
-  border: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
+  border: {fileID: 1948624989328810794, guid: 0db524861db5648499f30e3cded92558, type: 3}
   wall: {fileID: 1948624989328810794, guid: 8d9e7c1318db9a5498d685fa493d780b, type: 3}
   floorMaterial: {fileID: 7482667652216324306, guid: d32615324fcace24d87c5e5820562aef, type: 3}
   borderMaterial: {fileID: 7482667652216324306, guid: 4ddc783f4fa3e8645845ddd69e3244b7, type: 3}

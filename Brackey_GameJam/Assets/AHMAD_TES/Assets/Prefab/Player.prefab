@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 834081202382187383}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 549496497780872447}
@@ -104,6 +104,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   hitU: 1
+  hitD: 0
+  hitL: 1
+  hitR: 0
 --- !u!50 &3321615965835849497
 Rigidbody2D:
   serializedVersion: 4
@@ -207,6 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 43456791699000898}
   - component: {fileID: 2996807479282663289}
+  - component: {fileID: 5681602299319786558}
   m_Layer: 0
   m_Name: borderL
   m_TagString: Untagged
@@ -255,6 +259,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &5681602299319786558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3853542158840297322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 803c387ce5810f44c8e6f4eed0f8b031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitL: 1
 --- !u!1 &4643990495269357755
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,6 +282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7090343185556033057}
   - component: {fileID: 5201461792018662302}
+  - component: {fileID: 1269555195110003751}
   m_Layer: 0
   m_Name: borderR
   m_TagString: Untagged
@@ -313,6 +331,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1269555195110003751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4643990495269357755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6cc129e137f5c4cbb5298c4688df76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitR: 1
 --- !u!1 &9105019868392606071
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2613289952149476455}
   - component: {fileID: 4518449127238338266}
+  - component: {fileID: 6731896291937762727}
   m_Layer: 0
   m_Name: borderD
   m_TagString: Untagged
@@ -371,3 +403,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.1}
   m_EdgeRadius: 0
+--- !u!114 &6731896291937762727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9105019868392606071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07e73f20a0c665478703a13c2f62d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitD: 1

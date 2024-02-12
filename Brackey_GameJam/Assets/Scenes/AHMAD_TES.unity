@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 381423191}
   - component: {fileID: 381423190}
   - component: {fileID: 381423189}
+  - component: {fileID: 381423192}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -238,6 +239,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &381423192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381423188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fa02621569eff428625dbde8b25003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 0}
+  camSpeed: 0.2
 --- !u!1 &1299085326
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304215030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.357743, y: 15.906911, z: -10.085113}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -331,6 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5fb270dc84cc7f41a9ca3cda08424f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 381423188}
   player: {fileID: 834081202382187383, guid: 4c5e7cd6c2478b442a175131263fd94b, type: 3}
   losize: {x: 40, y: 40}
   roomCount: 100
@@ -338,9 +354,10 @@ MonoBehaviour:
   roomMinSize: {x: 2, y: 2}
   cubePrefab: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
   floor: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
+  border: {fileID: 1948624989328810794, guid: 65cafaae22a12d248bc4316dab32d0a2, type: 3}
   wall: {fileID: 1948624989328810794, guid: 8d9e7c1318db9a5498d685fa493d780b, type: 3}
   floorMaterial: {fileID: 7482667652216324306, guid: d32615324fcace24d87c5e5820562aef, type: 3}
-  blueMaterial: {fileID: 0}
+  borderMaterial: {fileID: 7482667652216324306, guid: 4ddc783f4fa3e8645845ddd69e3244b7, type: 3}
   greenMaterial: {fileID: 0}
   yellowMaterial: {fileID: 0}
   wallMaterial: {fileID: 21300000, guid: d718df15996871744af5bb3e6bc77941, type: 3}

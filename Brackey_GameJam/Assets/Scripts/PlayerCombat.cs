@@ -136,34 +136,34 @@ public class PlayerCombat : MonoBehaviour
 
 
         //transisi ke posisi baru(arah mouse baru), biar nggak ngeblink(MASIH AGAK NGEBUG)
-        //float newTargetPos = transform.localEulerAngles.z;
+        float newTargetPos = transform.localEulerAngles.z;
 
-        //distance1 = Mathf.Min(currentRotation, newTargetPos) - Mathf.Max(currentRotation, newTargetPos);
-        //distance2 = 360 - Mathf.Abs(distance1);
+        distance1 = Mathf.Min(currentRotation, newTargetPos) - Mathf.Max(currentRotation, newTargetPos);
+        distance2 = 360 - Mathf.Abs(distance1);
 
-        //float counter = 0;
-        //if(Mathf.Abs(distance1) < Mathf.Abs(distance2))
-        //{
-        //    while (counter < Mathf.Abs(distance1))
-        //    {
-        //        currentRotation += Mathf.Sign(distance1) * (slashRecoverySpeed * Time.deltaTime);
-        //        transform.rotation = Quaternion.Euler(0, 0, currentRotation);
-        //        counter += (slashRecoverySpeed * Time.deltaTime);
-        //        yield return null;
-        //        Debug.Log("D" + currentRotation);
-        //    }
-        //}
-        //else
-        //{
-        //    while (counter < Mathf.Abs(distance2))
-        //    {
-        //        currentRotation -= Mathf.Sign(distance2) * (slashRecoverySpeed * Time.deltaTime);
-        //        transform.rotation = Quaternion.Euler(0, 0, currentRotation);
-        //        counter += (slashRecoverySpeed * Time.deltaTime);
-        //        yield return null;
-        //        Debug.Log("U" + currentRotation);
-        //    }
-        //}
+        float counter = 0;
+        if(Mathf.Abs(distance1) < Mathf.Abs(distance2))
+        {
+            while (counter < Mathf.Abs(distance1))
+            {
+                currentRotation += Mathf.Sign(distance1) * (slashRecoverySpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(0, 0, currentRotation);
+                counter += (slashRecoverySpeed * Time.deltaTime);
+                yield return null;
+                Debug.Log("D" + currentRotation);
+            }
+        }
+        else
+        {
+            while (counter < Mathf.Abs(distance2))
+            {
+                currentRotation -= Mathf.Sign(distance2) * (slashRecoverySpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(0, 0, currentRotation);
+                counter += (slashRecoverySpeed * Time.deltaTime);
+                yield return null;
+                Debug.Log("U" + currentRotation);
+            }
+        }
         yield return new WaitForSeconds(attackCooldown);
         isAttack = false;
     }

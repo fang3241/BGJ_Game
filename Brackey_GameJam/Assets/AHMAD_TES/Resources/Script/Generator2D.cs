@@ -26,7 +26,8 @@ public class Generator2D : MonoBehaviour {
                 || (a.bounds.position.y >= (b.bounds.position.y + b.bounds.size.y)) || ((a.bounds.position.y + a.bounds.size.y) <= b.bounds.position.y));
         }
     }
-
+    [SerializeField]
+    public GameObject camera;
     [SerializeField]
     public GameObject player;
     [SerializeField]
@@ -44,11 +45,13 @@ public class Generator2D : MonoBehaviour {
     [SerializeField]
     GameObject floor;
     [SerializeField]
+    GameObject border;
+    [SerializeField]
     GameObject wall;
     [SerializeField]
     Sprite floorMaterial;
     [SerializeField]
-    Material blueMaterial;
+    Sprite borderMaterial;
     [SerializeField]
     Material greenMaterial;
     [SerializeField]
@@ -75,7 +78,7 @@ public class Generator2D : MonoBehaviour {
     HashSet<Prim.Edge> selectedEdges;
     //
     public int randSpawn;
-    //Vector2Int spawnPoint;
+    Vector2Int spawnPoint;
 
 
     void Start() {
@@ -288,14 +291,21 @@ public class Generator2D : MonoBehaviour {
                 if (grid[pos] == CellType.HDoor) {
                     cekArch('F', pos);
                 }
+                if (grid[pos] == CellType.None) {
+                    cekArch('N', pos);
+                }
             }
         }
-    }
+        GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y - 0.12f) * scaling), Quaternion.identity);
+        _player.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+        camera.GetComponent<CameraMovement>()._target = _player.transform;
 
+    }
+        
     void PlaceCube(Vector2Int location, Vector2Int size, Sprite sprite) {
         GameObject go = Instantiate(cubePrefab, new Vector2(location.x * scaling, location.y * scaling), Quaternion.identity, floorParent.transform);
         //Sprite sprite = Resources.Load<Sprite>(spritePath);
-        //go.GetComponent<Transform>().localScale = new Vector3(2.5f, 0.1f, 2.5f);
+        go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
         go.GetComponent<SpriteRenderer>().sprite = sprite;
         //GameObject roof = Instantiate(cubePrefab, new Vector3(location.x * scaling, scaling, location.y * scaling), Quaternion.identity);
         //roof.GetComponent<Transform>().localScale = new Vector3(2.5f, 0.1f, 2.5f);
@@ -308,12 +318,12 @@ public class Generator2D : MonoBehaviour {
     
         if(gridType == 'R'){
 //            posi.x = posi.x + 1;
-            Debug.Log(": " + randSpawn);
+            //Debug.Log(": " + randSpawn);
             randSpawn--;
             if(randSpawn == 0){
                 //player.position = new Vector3(pos.x * scaling, 0f, pos.y  * scaling);
                 //[]
-                GameObject _player = Instantiate(player, new Vector3(pos.x * scaling, pos.y * scaling, -1), Quaternion.identity);
+                spawnPoint = new Vector2Int((int)pos.x, (int)pos.y);
                 //Debug.Log(player.position);
             }
             if(pos.x > 0){
@@ -347,7 +357,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
+                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -388,7 +398,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
+                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -486,6 +496,20 @@ public class Generator2D : MonoBehaviour {
                 }
             }
         }
+        if(gridType == 'N'){
+            if(pos.x > 0 && grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] != CellType.None){
+                placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
+            }
+            if(pos.x + 1 < size.x && grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] != CellType.None){
+                placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
+            }
+            if(pos.y > 0 && grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] != CellType.None){
+                placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
+            }
+            if(pos.y + 1 < size.y && grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] != CellType.None){
+                placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
+            }
+        }
     }
     
     void PlaceRoom(Vector2Int location, Vector2Int size) {
@@ -522,6 +546,11 @@ public class Generator2D : MonoBehaviour {
     }
     void placeWallU(Vector2Int location, Vector2 size, Sprite material){
         GameObject go = Instantiate(wall, new Vector2(location.x * scaling, (location.y + 0.75f) * scaling), Quaternion.identity, wallParent);
+        go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+    }
+    void placeBorder(Vector2Int location, Vector2 size, Sprite material){
+        GameObject go = Instantiate(border, new Vector2(location.x * scaling, (location.y + 0.5f) * scaling), Quaternion.identity, wallParent);
+        go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
         //go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
     }
 

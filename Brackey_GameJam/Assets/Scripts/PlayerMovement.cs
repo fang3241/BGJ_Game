@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveSpeed;
     private Vector2 _moveVec;
+    public bool hitU = true; 
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,10 @@ public class PlayerMovement : MonoBehaviour
     {
         _moveVec.x = Input.GetAxisRaw("Horizontal");
         _moveVec.y = Input.GetAxisRaw("Vertical");
+        
+        if(hitU == false && _moveVec.y > 0){
+            _moveVec.y = 0;
+        }
     }
 
     private void FixedUpdate()

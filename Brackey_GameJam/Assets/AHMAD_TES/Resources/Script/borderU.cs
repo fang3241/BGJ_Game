@@ -22,6 +22,10 @@ public class borderU : MonoBehaviour
             // Access the parent GameObject and change its value
             transform.parent.GetComponent<PlayerMovement>().hitU = true; // Replace YourParentScript and hitU with your actual script and value names
         }
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            transform.parent.GetComponent<PlayerMovement>().hitU = false;
+        }
     }
 
     void OnTriggerStay2D(Collider2D collision)

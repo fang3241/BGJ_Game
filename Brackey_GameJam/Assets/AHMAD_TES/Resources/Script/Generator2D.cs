@@ -296,8 +296,8 @@ public class Generator2D : MonoBehaviour {
                 }
             }
         }
-        GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y - 0.12f) * scaling), Quaternion.identity);
-        _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.75f, scaling * 0.75f);
+        GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
+        _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
         camera.GetComponent<CameraMovement>()._target = _player.transform;
 
     }

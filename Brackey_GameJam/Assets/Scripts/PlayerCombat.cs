@@ -150,7 +150,7 @@ public class PlayerCombat : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 0, currentRotation);
                 counter += (slashRecoverySpeed * Time.deltaTime);
                 yield return null;
-                Debug.Log("D" + currentRotation);
+                //Debug.Log("D" + currentRotation);
             }
         }
         else
@@ -161,7 +161,7 @@ public class PlayerCombat : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0, 0, currentRotation);
                 counter += (slashRecoverySpeed * Time.deltaTime);
                 yield return null;
-                Debug.Log("U" + currentRotation);
+                //Debug.Log("U" + currentRotation);
             }
         }
         yield return new WaitForSeconds(attackCooldown);

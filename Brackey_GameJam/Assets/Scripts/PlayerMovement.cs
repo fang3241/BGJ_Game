@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D _rb;
+    private SpriteRenderer[] mySpriteRenderer;
 
     public float moveSpeed;
     private Vector2 _moveVec;
@@ -12,11 +13,13 @@ public class PlayerMovement : MonoBehaviour
     public bool hitD = false; 
     public bool hitL = false; 
     public bool hitR = false; 
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        mySpriteRenderer = GetComponentsInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -24,7 +27,29 @@ public class PlayerMovement : MonoBehaviour
     {
         _moveVec.x = Input.GetAxisRaw("Horizontal");
         _moveVec.y = Input.GetAxisRaw("Vertical");
-        
+        // if the A key was pressed this frame
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Flip the sprite based on mouse position relative to the GameObject
+        if (mousePosition.x < transform.position.x)
+        {
+            // Mouse is on the left side of the GameObject, flip the sprite
+            mySpriteRenderer[0].flipX = true;
+        }
+        else
+        {
+            // Mouse is on the right side of the GameObject, unflip the sprite
+            mySpriteRenderer[0].flipX = false;
+        }
+
+        //
+        if(_moveVec != Vector2.zero){
+            animator.speed = 1f;
+        }
+        else{
+            animator.speed = 0f;
+            animator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, 0f);
+        }
     }
 
     private void FixedUpdate()

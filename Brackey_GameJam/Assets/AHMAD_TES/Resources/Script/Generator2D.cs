@@ -72,40 +72,55 @@ public class Generator2D : MonoBehaviour {
     Vector2Int tar;
 
     [SerializeField]
-    public static Grid2D<Generator2D.CellType> grid;
+    public static Grid2D<CellType>[] grid = new Grid2D<CellType>[10];
     List<Room> rooms;
     Delaunay2D delaunay;
     HashSet<Prim.Edge> selectedEdges;
     //
     public int randSpawn;
     Vector2Int spawnPoint;
+    GameObject wallP, floorP;
+    GameObject[] Layer = new GameObject[10];
+    
 
 
     void Start() {
-        Generate();
+        for(int i = 0; i < 10; i++){
+            Generate(i);
+        }
+        changeLayer(9);
+        GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
+        _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
+        camera.GetComponent<CameraMovement>()._target = _player.transform;
     }
 
-    void Generate() {
+    void Generate(int layer) {
         //Debug.Log("RandSpawn: " + randSpawn);
         //Debug.Log("cct" + Generator2D.CellType);
-        Generator2D.grid = new Grid2D<CellType>(losize, Vector2Int.zero);
+        Generator2D.grid[layer] = new Grid2D<CellType>(losize, Vector2Int.zero);
         Debug.Log("size" + losize);
         Generator2D.size = losize;
         Debug.Log("Gz" + Generator2D.size);
-        Debug.Log("ggs"+ Generator2D.grid[0,0]);
+        Debug.Log("ggs"+ Generator2D.grid[layer][0,0]);
         rooms = new List<Room>();
 
-        PlaceRooms();
+        PlaceRooms(layer);
         Triangulate();
         CreateHallways();
-        PathfindHallways();
+        PathfindHallways(layer);
         randSpawn = Random.Range(0, (size.x + size.y)/2);
-        drawFloor();
-        drawWall();
+        Layer[layer] = new GameObject("Layer" + layer);
+        wallP = new GameObject("wall");
+        floorP = new GameObject("floor");
+        wallP.transform.parent = Layer[layer].transform;
+        floorP.transform.parent = Layer[layer].transform;
+        Layer[layer].SetActive(false);
+        drawFloor(layer);
+        drawWall(layer);
         //generateEnemy(enemyCount);
     }
 
-    void PlaceRooms() {
+    void PlaceRooms(int layer) {
         for (int i = 0; i < roomCount; i++) {
             Vector2Int location = new Vector2Int(
                 Random.Range(0, losize.x),
@@ -137,9 +152,9 @@ public class Generator2D : MonoBehaviour {
 
                 foreach (var pos in newRoom.bounds.allPositionsWithin) {
                     Debug.Log(pos);
-                    Debug.Log(Generator2D.grid.Size);
-                    Debug.Log(Generator2D.grid[0,0]);
-                    Generator2D.grid[pos] = CellType.Room;
+                    Debug.Log(Generator2D.grid[layer].Size);
+                    Debug.Log(Generator2D.grid[layer][0,0]);
+                    Generator2D.grid[layer][pos] = CellType.Room;
                 }
             }
         }
@@ -175,7 +190,7 @@ public class Generator2D : MonoBehaviour {
         }
     }
 
-    void PathfindHallways() {
+    void PathfindHallways(int layer) {
         DungeonPathfinder2D aStar = new DungeonPathfinder2D(losize);
 
         foreach (var edge in selectedEdges) {
@@ -192,11 +207,11 @@ public class Generator2D : MonoBehaviour {
                 
                 pathCost.cost = Vector2Int.Distance(b.Position, endPos);    //heuristic
 
-                if (grid[b.Position] == CellType.Room) {
+                if (grid[layer][b.Position] == CellType.Room) {
                     pathCost.cost += 10;
-                } else if (grid[b.Position] == CellType.None) {
+                } else if (grid[layer][b.Position] == CellType.None) {
                     pathCost.cost += 5;
-                } else if (grid[b.Position] == CellType.Hallway) {
+                } else if (grid[layer][b.Position] == CellType.Hallway) {
                     pathCost.cost += 1;
                 }
 
@@ -209,24 +224,24 @@ public class Generator2D : MonoBehaviour {
                 for (int i = 0; i < path.Count; i++) {
                     var current = path[i];
 
-                    if (grid[current] == CellType.None) {
-                        grid[current] = CellType.Hallway;
+                    if (grid[layer][current] == CellType.None) {
+                        grid[layer][current] = CellType.Hallway;
                     }
 
                     if (i > 0) {
                         var prev = path[i - 1];
-                        if(grid[current] == CellType.Hallway && grid[prev] == CellType.Room){
-                            grid[prev] = CellType.RDoor;
-                            grid[current] = CellType.HDoor;
+                        if(grid[layer][current] == CellType.Hallway && grid[layer][prev] == CellType.Room){
+                            grid[layer][prev] = CellType.RDoor;
+                            grid[layer][current] = CellType.HDoor;
                         }
                         var delta = current - prev;
                     }
 
                     if(i < path.Count - 1){
                         var next = path[i + 1];
-                        if(grid[current] == CellType.Hallway && grid[next] == CellType.Room){
-                            grid[next] = CellType.RDoor;
-                            grid[current] = CellType.HDoor;
+                        if(grid[layer][current] == CellType.Hallway && grid[layer][next] == CellType.Room){
+                            grid[layer][next] = CellType.RDoor;
+                            grid[layer][current] = CellType.HDoor;
                         }
                     }
                 }
@@ -235,38 +250,38 @@ public class Generator2D : MonoBehaviour {
         }
     }
 
-    void drawFloor(){
+    void drawFloor(int layer){
         for(int x = 0; x < size.x; x++){
             for(int y = 0; y < size.y; y++){
                 var pos = new Vector2Int((int)x, (int)y);
                 //floor + ceiling
-                if (grid[pos] == CellType.Room) {
+                if (grid[layer][pos] == CellType.Room) {
                     PlaceRoomz(pos);
                 }
-                if (grid[pos] == CellType.Hallway) {
+                if (grid[layer][pos] == CellType.Hallway) {
                     PlaceHallway(pos);
                 }
-                if (grid[pos] == CellType.RDoor) {
+                if (grid[layer][pos] == CellType.RDoor) {
                     PlaceRDoor(pos);
                 }
-                if (grid[pos] == CellType.HDoor) {
+                if (grid[layer][pos] == CellType.HDoor) {
                     PlaceHDoor(pos);
                     //cek xy+-1 apa ada yang ROOM, kalo ada paksa ubah jadi RDoor, di lantai ngga keliatan keganti tapi
-                    if((grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor) || (grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room) || (grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor) || (grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor)){
+                    if((grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor) || (grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room) || (grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor) || (grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor)){
                         //d
                     }
                     else{
-                        if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Room){
-                            grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] = CellType.RDoor;
+                        if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Room){
+                            grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] = CellType.RDoor;
                         }
-                        if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room){
-                            grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] = CellType.RDoor;
+                        if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room){
+                            grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] = CellType.RDoor;
                         }
-                        if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room){
-                            grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] = CellType.RDoor;
+                        if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room){
+                            grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] = CellType.RDoor;
                         }
-                        if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Room){
-                            grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] = CellType.RDoor;
+                        if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Room){
+                            grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] = CellType.RDoor;
                         }
                     }
                 }
@@ -274,36 +289,32 @@ public class Generator2D : MonoBehaviour {
         }
     }
 
-    void drawWall(){
+    void drawWall(int layer){
         for(int x = 0; x < size.x; x++){
             for(int y = 0; y < size.y; y++){
                 var pos = new Vector2Int((int)x, (int)y);
                 //floor + ceiling
-                if (grid[pos] == CellType.Room) {
-                    cekArch('R', pos);
+                if (grid[layer][pos] == CellType.Room) {
+                    cekArch('R', pos, layer);
                 }
-                if (grid[pos] == CellType.Hallway) {
-                    cekArch('H', pos);
+                if (grid[layer][pos] == CellType.Hallway) {
+                    cekArch('H', pos, layer);
                 }
-                if (grid[pos] == CellType.RDoor) {
-                    cekArch('D', pos);
+                if (grid[layer][pos] == CellType.RDoor) {
+                    cekArch('D', pos, layer);
                 }
-                if (grid[pos] == CellType.HDoor) {
-                    cekArch('F', pos);
+                if (grid[layer][pos] == CellType.HDoor) {
+                    cekArch('F', pos, layer);
                 }
-                if (grid[pos] == CellType.None) {
-                    cekArch('N', pos);
+                if (grid[layer][pos] == CellType.None) {
+                    cekArch('N', pos, layer);
                 }
             }
         }
-        GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
-        _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
-        camera.GetComponent<CameraMovement>()._target = _player.transform;
-
     }
         
     void PlaceCube(Vector2Int location, Vector2Int size, Sprite sprite) {
-        GameObject go = Instantiate(cubePrefab, new Vector2(location.x * scaling, location.y * scaling), Quaternion.identity, floorParent.transform);
+        GameObject go = Instantiate(cubePrefab, new Vector2(location.x * scaling, location.y * scaling), Quaternion.identity, floorP.transform);
         //Sprite sprite = Resources.Load<Sprite>(spritePath);
         go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
         go.GetComponent<SpriteRenderer>().sprite = sprite;
@@ -313,7 +324,7 @@ public class Generator2D : MonoBehaviour {
         //roof.GetComponent<MeshRenderer>().material = material;
     }
 
-    void cekArch(char gridType, Vector2Int pos) {
+    void cekArch(char gridType, Vector2Int pos, int layer) {
 //        var posi = new Vector2Int((int)pos.x, (int)pos.y);
     
         if(gridType == 'R'){
@@ -327,7 +338,7 @@ public class Generator2D : MonoBehaviour {
                 //Debug.Log(player.position);
             }
             if(pos.x > 0){
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room || grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Room || grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.RDoor){
                    //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x - 1) + " " + pos.y);
                 }
                 else{
@@ -338,7 +349,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
             }
             if(pos.x <= size.x){
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Room || grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Room || grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x + 1) + " " + pos.y);
                 }
                 else{
@@ -346,7 +357,7 @@ public class Generator2D : MonoBehaviour {
                 }
             }
             if(pos.y > 0){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Room || grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -357,7 +368,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -368,7 +379,7 @@ public class Generator2D : MonoBehaviour {
         if(gridType == 'H'){
 //            posi.x = posi.x + 1;
             if(pos.x > 0){
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Hallway || grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.Hallway || grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.HDoor){
                    //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x - 1) + " " + pos.y);
                 }
                 else{
@@ -379,7 +390,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
             }
             if(pos.x <= size.x){
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Hallway || grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.Hallway || grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x + 1) + " " + pos.y);
                 }
                 else{
@@ -387,7 +398,7 @@ public class Generator2D : MonoBehaviour {
                 }
             }
             if(pos.y > 0){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.Hallway || grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -398,7 +409,7 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Hallway || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.Room || grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                 }
                 else{
@@ -409,11 +420,11 @@ public class Generator2D : MonoBehaviour {
         if(gridType == 'D'){
 //            posi.x = posi.x + 1;
             if(pos.x > 0){
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.HDoor){
                    //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x - 1) + " " + pos.y);
                    //door
                 }
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.None){
                     //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
                 }
             }
@@ -421,20 +432,20 @@ public class Generator2D : MonoBehaviour {
                 //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
             }
             if(pos.x <= size.x){
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x + 1) + " " + pos.y);
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.None){
                     //placeWallR(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
                 }
             }
             if(pos.y > 0){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.None){
                     //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
                 }
             }
@@ -442,11 +453,11 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.HDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.None){
                     placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
                 }
             }
@@ -454,11 +465,11 @@ public class Generator2D : MonoBehaviour {
         if(gridType == 'F'){    //!cek +-xy, kalo ada merah force ganti jadi ijo!!!![] -> kalo ketemu merah apus semwa wall(wall jadiin 1 child yang sama dulu), terus ulangi generate wall
 //            posi.x = posi.x + 1;
             if(pos.x > 0){
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.RDoor){
                    //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x - 1) + " " + pos.y);
                    //door
                 }
-                if(grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] == CellType.None){
                     //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
                 }
             }
@@ -466,20 +477,20 @@ public class Generator2D : MonoBehaviour {
                 //placeWallL(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
             }
             if(pos.x <= size.x){
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + ((int)pos.x + 1) + " " + pos.y);
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] == CellType.None){
                     //placeWallR(pos, new Vector2(0.1f, 1.0f), purpleMaterial);
                 }
             }
             if(pos.y > 0){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] == CellType.None){
                     //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
                 }
             }
@@ -487,26 +498,26 @@ public class Generator2D : MonoBehaviour {
                 //placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
             }
             if(pos.y <= size.y){
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.RDoor){
                     //Debug.Log("no wall between " + pos.x + " " + pos.y + " and " + pos.x + " " + ((int)pos.y - 1));
                     //door
                 }
-                if(grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.None){
+                if(grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] == CellType.None){
                     placeWallU(pos, new Vector2(1.0f, 0.1f), wallMaterial);
                 }
             }
         }
         if(gridType == 'N'){
-            if(pos.x > 0 && grid[new Vector2Int((int)pos.x - 1, (int)pos.y)] != CellType.None){
+            if(pos.x > 0 && grid[layer][new Vector2Int((int)pos.x - 1, (int)pos.y)] != CellType.None){
                 placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
             }
-            if(pos.x + 1 < size.x && grid[new Vector2Int((int)pos.x + 1, (int)pos.y)] != CellType.None){
+            if(pos.x + 1 < size.x && grid[layer][new Vector2Int((int)pos.x + 1, (int)pos.y)] != CellType.None){
                 placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
             }
-            if(pos.y > 0 && grid[new Vector2Int((int)pos.x, (int)pos.y - 1)] != CellType.None){
+            if(pos.y > 0 && grid[layer][new Vector2Int((int)pos.x, (int)pos.y - 1)] != CellType.None){
                 placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
             }
-            if(pos.y + 1 < size.y && grid[new Vector2Int((int)pos.x, (int)pos.y + 1)] != CellType.None){
+            if(pos.y + 1 < size.y && grid[layer][new Vector2Int((int)pos.x, (int)pos.y + 1)] != CellType.None){
                 placeBorder(pos, new Vector2(0.1f, 1.0f), wallMaterial);
             }
         }
@@ -529,39 +540,50 @@ public class Generator2D : MonoBehaviour {
     }
 
     void placeWallR(Vector2Int location, Vector2 size, Material material){
-        GameObject go = Instantiate(wall, new Vector3((location.x + 0.5f) * scaling, 0, location.y * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(wall, new Vector3((location.x + 0.5f) * scaling, 0, location.y * scaling), Quaternion.identity, wallP.transform);
         go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
         go.GetComponent<Transform>().Rotate(0f, -90f, 0f);
         //go.GetComponent<MeshRenderer>().material = material;
     }
     void placeWallL(Vector2Int location, Vector2 size, Material material){
-        GameObject go = Instantiate(wall, new Vector3((location.x - 0.5f) * scaling, 0, location.y * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(wall, new Vector3((location.x - 0.5f) * scaling, 0, location.y * scaling), Quaternion.identity, wallP.transform);
         go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
         go.GetComponent<Transform>().Rotate(0f, 90f, 0f);
     }
     void placeWallD(Vector2Int location, Vector2 size, Material material){
-        GameObject go = Instantiate(wall, new Vector3(location.x * scaling, 0, (location.y + 0.5f) * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(wall, new Vector3(location.x * scaling, 0, (location.y + 0.5f) * scaling), Quaternion.identity, wallP.transform);
         go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
         go.GetComponent<Transform>().Rotate(0f, 180f, 0f);
     }
     void placeWallU(Vector2Int location, Vector2 size, Sprite material){
-        GameObject go = Instantiate(wall, new Vector2(location.x * scaling, (location.y + 0.75f) * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(wall, new Vector2(location.x * scaling, (location.y + 0.75f) * scaling), Quaternion.identity, wallP.transform);
         go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
     }
     void placeBorder(Vector2Int location, Vector2 size, Sprite material){
-        GameObject go = Instantiate(border, new Vector2(location.x * scaling, (location.y) * scaling), Quaternion.identity, wallParent);
+        GameObject go = Instantiate(border, new Vector2(location.x * scaling, (location.y) * scaling), Quaternion.identity, wallP.transform);
         go.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
         //go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
     }
 
-    //
+    void changeLayer(int layer){
+        for(int i = 0; i < 10; i++){
+            if(i == layer){
+                Layer[i].SetActive(true);
+            }
+            else{
+                Layer[i].SetActive(false);
+            }
+        }
+    }
+
+    /*
     void generateEnemy(int count){
         for(int i = count; i > 0; i--){
             //pick random location
             tar = new Vector2Int(Random.Range(0,Generator2D.size.x), Random.Range(0,Generator2D.size.y));
             //check if not null
-            if(Generator2D.grid[tar] != CellType.None){
-                Debug.Log("spawn enemy at " + Generator2D.grid[tar]);
+            if(Generator2D.grid[layer][tar] != CellType.None){
+                Debug.Log("spawn enemy at " + Generator2D.grid[layer][tar]);
                 GameObject enem = Instantiate(enemy, new Vector3((tar.x + 0.5f) * scaling, 0.5f, (tar.y + 0.5f) * scaling), Quaternion.identity);
                 enem.GetComponent<Transform>().localScale = new Vector3(1.5f, 1.5f, 1.5f); 
                 enem.GetComponent<Transform>().Rotate(0f, Random.Range(0f,360f), 0f);
@@ -574,5 +596,5 @@ public class Generator2D : MonoBehaviour {
             //spawn enemy, count -= 1
             //repeat until count = 0;
         }
-    }
+    }*/
 }

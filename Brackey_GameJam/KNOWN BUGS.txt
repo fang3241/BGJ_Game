@@ -1,0 +1,3 @@
+- Kadang ada beberapa pintu yang ilang (kadang ngga full 30 buah pintu)
+
+- Belum tentu bisa keluar dari dungeon (ada kemungkinan ruangannya ngga nyambung ke lantai akhir)

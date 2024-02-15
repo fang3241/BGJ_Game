@@ -11,7 +11,8 @@ public class Generator2D : MonoBehaviour {
         Room,
         Hallway,
         RDoor,
-        HDoor
+        HDoor,
+        XDoor
     }
 
     class Room {
@@ -81,13 +82,35 @@ public class Generator2D : MonoBehaviour {
     Vector2Int spawnPoint;
     GameObject wallP, floorP;
     GameObject[] Layer = new GameObject[10];
-    
+    //
+    GameObject _layer;
+    [SerializeField]
+    GameObject doorObject;
+
+
+    public struct doorStats{
+        public Vector2Int loc;
+        public int floor;
+        public Vector2Int to;
+    }
+
+    public struct doorList{
+        public doorStats door1;
+        public doorStats door2;
+        public doorStats door3;
+    }
+
+    public doorList[] allDoors = new doorList[10];
+    public int[] jmlDoor = new int[10];
 
 
     void Start() {
         for(int i = 0; i < 10; i++){
             Generate(i);
+            jmlDoor[i] = 3;
         }
+        generateDoors();
+        printDoors();
         changeLayer(9);
         GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
         _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
@@ -131,7 +154,7 @@ public class Generator2D : MonoBehaviour {
                 Random.Range(roomMinSize.x, roomMaxSize.x + 1),
                 Random.Range(roomMinSize.y, roomMaxSize.y + 1)
             );
-
+//
             bool add = true;
             Room newRoom = new Room(location, roomSize);
             Room buffer = new Room(location + new Vector2Int(-1, -1), roomSize + new Vector2Int(2, 2));
@@ -573,6 +596,308 @@ public class Generator2D : MonoBehaviour {
             else{
                 Layer[i].SetActive(false);
             }
+        }
+    }
+
+    void generateDoors(){
+        int alreadyMade = 0;
+        int currentFloor = 0;
+        for(int i = 0; i < 10; i++){
+            allDoors[i].door1.floor = -1;
+            allDoors[i].door2.floor = -1;
+            allDoors[i].door3.floor = -1;
+        }
+
+        for(int i = 0; i < 10; i++){
+            if(alreadyMade < 15){
+                if(allDoors[currentFloor].door1.loc == default(Vector2Int) && allDoors[currentFloor].door1.floor == -1 && allDoors[currentFloor].door1.to == default(Vector2Int)){
+                    Debug.Log("NoValue@door1");
+                    Vector2Int thisPos, targetPos;
+                    //
+                    int validWall = 0;
+                    //loop this layer, validWall++ for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                //Debug.Log("validtoDoor");
+                                validWall++;
+                            }
+                        }
+                    }
+                    //random xWall(0, validWall)
+                    int wallToDoor = Random.Range(0, validWall);
+                    //loop this layer, xWall-- for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                wallToDoor--;
+                                if(wallToDoor == 0){
+                                    Debug.Log("change to door1 at " + j + ", " + k);
+                                    jmlDoor[currentFloor]--;
+                                    Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] = CellType.XDoor;
+                                    allDoors[currentFloor].door1.loc = new Vector2Int((int)j, (int)k);
+                                    //randomize target floor
+                                    allDoors[currentFloor].door1.floor = randCekFloor();
+                                    allDoors[currentFloor].door1.to = findTarget(allDoors[currentFloor].door1.floor, currentFloor, 1);
+                                    Debug.Log("add target door1 at " + allDoors[currentFloor].door1.to);
+                                    //instantiate door at j,k
+                                    //transform.parent = Layer[layer].transform;
+                                    //_layer =  GameObject.Find("Layer" + currentFloor);
+                                    Debug.Log(Layer[currentFloor]);
+                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                }
+                            }
+                        }
+                    }
+                    alreadyMade++;
+                    i--;
+                    //count[currentFloor]--;
+                    //count[targetFloor]--;
+                }
+                else if(allDoors[currentFloor].door2.loc == default(Vector2Int) && allDoors[currentFloor].door2.floor == -1 && allDoors[currentFloor].door2.to == default(Vector2Int)){
+                    Debug.Log("NoValue@door2");
+                    Vector2Int thisPos, targetPos;
+                    //
+                    int validWall = 0;
+                    //loop this layer, validWall++ for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                //Debug.Log("validtoDoor");
+                                validWall++;
+                            }
+                        }
+                    }
+                    //random xWall(0, validWall)
+                    int wallToDoor = Random.Range(0, validWall);
+                    //loop this layer, xWall-- for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                wallToDoor--;
+                                if(wallToDoor == 0){
+                                    Debug.Log("change to door2 at " + j + ", " + k);
+                                    jmlDoor[currentFloor]--;
+                                    Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] = CellType.XDoor;
+                                    allDoors[currentFloor].door2.loc = new Vector2Int((int)j, (int)k);
+                                    //randomize target floor
+                                    allDoors[currentFloor].door2.floor = randCekFloor();
+                                    allDoors[currentFloor].door2.to = findTarget(allDoors[currentFloor].door2.floor, currentFloor, 2);
+                                    Debug.Log("add target door2 at " + allDoors[currentFloor].door2.to);
+                                    //_layer =  GameObject.Find("Layer" + currentFloor);
+                                    Debug.Log(Layer[currentFloor]);
+                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                }
+                            }
+                        }
+                    }
+                    //
+                    alreadyMade++;
+                    i--;
+                }
+                else if(allDoors[currentFloor].door3.loc == default(Vector2Int) && allDoors[currentFloor].door3.floor == -1 && allDoors[currentFloor].door3.to == default(Vector2Int)){
+                    Debug.Log("NoValue@door3");
+                    Vector2Int thisPos, targetPos;
+                    //
+                    int validWall = 0;
+                    //loop this layer, validWall++ for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                //Debug.Log("validtoDoor");
+                                validWall++;
+                            }
+                        }
+                    }
+                    //random xWall(0, validWall)
+                    int wallToDoor = Random.Range(0, validWall);
+                    //loop this layer, xWall-- for each wall with y+1 room,
+                    for(int j = 0; j < losize.x; j++){
+                        for(int k = 1; k < losize.y; k++){
+                            if(Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                                wallToDoor--;
+                                if(wallToDoor == 0){
+                                    Debug.Log("change to door3 at " + j + ", " + k);
+                                    jmlDoor[currentFloor]--;
+                                    Generator2D.grid[currentFloor][new Vector2Int((int)j, (int)k)] = CellType.XDoor;
+                                    allDoors[currentFloor].door3.loc = new Vector2Int((int)j, (int)k);
+                                    //randomize target floor
+                                    allDoors[currentFloor].door3.floor = randCekFloor();
+                                    allDoors[currentFloor].door3.to = findTarget(allDoors[currentFloor].door3.floor, currentFloor, 3);
+                                    Debug.Log("add target door3 at " + allDoors[currentFloor].door3.to);
+                                    //_layer =  GameObject.Find("Layer" + currentFloor);
+                                    Debug.Log(Layer[currentFloor]);
+                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                }
+                            }
+                        }
+                    }
+                    //
+                    alreadyMade++;
+                    i--;
+                }
+                else{
+                    Debug.Log("switch to next layer, alreadyMade: " + alreadyMade);
+                    currentFloor++;
+                }
+            }
+        }
+    }
+
+    public int randCekFloor(){
+        int rand = Random.Range(0, 10);
+        if(jmlDoor[rand] > 0){
+            jmlDoor[rand]--;
+            return rand;
+        }
+        else{
+            return randCekFloor();
+        }
+    }
+
+    public Vector2Int findTarget(int floor, int target, int door){
+        //[!] kurang cek apakah di struct[]masih kosong? kalo yes diset, kalo ngga self loop
+        if(allDoors[floor].door1.loc == default(Vector2Int) && allDoors[floor].door1.floor == -1 && allDoors[floor].door1.to == default(Vector2Int)){
+            Vector2Int position = new Vector2Int();
+            int valid = 0;
+            //Debug.Log("find target");
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        valid++;
+                        //Debug.Log("valid target");
+                    }
+                }
+            }
+            int randd = Random.Range(0, valid);
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        randd--;
+                        //Debug.Log("valid target--");
+                        if(randd == 0){
+                            //Debug.Log("change to target door");
+                            Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] = CellType.XDoor;
+                            position = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door1.loc = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door1.floor = target;
+                            if(door == 1){
+                                allDoors[floor].door1.to = allDoors[target].door1.loc;      //[!!!]
+                            }
+                            if(door == 2){
+                                allDoors[floor].door1.to = allDoors[target].door2.loc;      //[!!!]
+                            }
+                            if(door == 3){
+                                allDoors[floor].door1.to = allDoors[target].door3.loc;      //[!!!]
+                            }
+                            Debug.Log(Layer[floor]);
+                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                        }
+                    }
+                }
+            }
+            return position;
+        }
+        else if(allDoors[floor].door2.loc == default(Vector2Int) && allDoors[floor].door2.floor == -1 && allDoors[floor].door2.to == default(Vector2Int)){
+            Vector2Int position = new Vector2Int();
+            int valid = 0;
+            //Debug.Log("find target");
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        valid++;
+                        //Debug.Log("valid target");
+                    }
+                }
+            }
+            int randd = Random.Range(0, valid);
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        randd--;
+                        //Debug.Log("valid target--");
+                        if(randd == 0){
+                            //Debug.Log("change to target door");
+                            Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] = CellType.XDoor;
+                            position = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door2.loc = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door2.floor = target;
+                            if(door == 1){
+                                allDoors[floor].door2.to = allDoors[target].door1.loc;      //[!!!]
+                            }
+                            if(door == 2){
+                                allDoors[floor].door2.to = allDoors[target].door2.loc;      //[!!!]
+                            }
+                            if(door == 3){
+                                allDoors[floor].door2.to = allDoors[target].door3.loc;      //[!!!]
+                            }
+                            Debug.Log(Layer[floor]);
+                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                        }
+                    }
+                }
+            }
+            return position;
+        }
+        else if(allDoors[floor].door3.loc == default(Vector2Int) && allDoors[floor].door3.floor == -1 && allDoors[floor].door3.to == default(Vector2Int)){
+            Vector2Int position = new Vector2Int();
+            int valid = 0;
+            //Debug.Log("find target");
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        valid++;
+                        //Debug.Log("valid target");
+                    }
+                }
+            }
+            int randd = Random.Range(0, valid);
+            for(int i = 0; i < losize.x; i++){
+                for(int j = 1; j < losize.y; j++){
+                    if(Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] == CellType.None && Generator2D.grid[floor][new Vector2Int((int)i, (int)j - 1)] == CellType.Room){
+                        randd--;
+                        //Debug.Log("valid target--");
+                        if(randd == 0){
+                            //Debug.Log("change to target door");
+                            Generator2D.grid[floor][new Vector2Int((int)i, (int)j)] = CellType.XDoor;
+                            position = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door3.loc = new Vector2Int((int)i, (int)j);
+                            allDoors[floor].door3.floor = target;
+                            if(door == 1){
+                                allDoors[floor].door3.to = allDoors[target].door1.loc;      //[!!!]
+                            }
+                            if(door == 2){
+                                allDoors[floor].door3.to = allDoors[target].door2.loc;      //[!!!]
+                            }
+                            if(door == 3){
+                                allDoors[floor].door3.to = allDoors[target].door3.loc;      //[!!!]
+                            }
+                            Debug.Log(Layer[floor]);
+                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                        }
+                    }
+                }
+            }
+            return position;
+        }
+        else{
+            return new Vector2Int(0,0);
+        }
+    }
+
+    public void printDoors(){
+        for(int i = 0; i < 10; i++){
+            Debug.Log("///FLOOR " + i + "///");
+            Debug.Log("[Door1]" + allDoors[i].door1.loc + ", " + allDoors[i].door1.floor + ", " + allDoors[i].door1.to);
+            Debug.Log("[Door2]" + allDoors[i].door2.loc + ", " + allDoors[i].door2.floor + ", " + allDoors[i].door2.to);
+            Debug.Log("[Door3]" + allDoors[i].door3.loc + ", " + allDoors[i].door3.floor + ", " + allDoors[i].door3.to);
+            Debug.Log("///");
         }
     }
 

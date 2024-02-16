@@ -81,7 +81,7 @@ public class Generator2D : MonoBehaviour {
     public int randSpawn;
     Vector2Int spawnPoint;
     GameObject wallP, floorP;
-    GameObject[] Layer = new GameObject[10];
+    public GameObject[] Layer = new GameObject[10];
     //
     GameObject _layer;
     [SerializeField]
@@ -588,7 +588,7 @@ public class Generator2D : MonoBehaviour {
         //go.GetComponent<Transform>().localScale = new Vector3(2.5f, 2.5f, 2.5f);
     }
 
-    void changeLayer(int layer){
+    public void changeLayer(int layer){
         for(int i = 0; i < 10; i++){
             if(i == layer){
                 Layer[i].SetActive(true);
@@ -597,6 +597,11 @@ public class Generator2D : MonoBehaviour {
                 Layer[i].SetActive(false);
             }
         }
+    }
+
+    public void tpPlayer(Vector2Int coord){
+        GameObject _player = GameObject.Find("Player(Clone)");
+        _player.GetComponent<Transform>().position = new Vector2(scaling * coord.x, scaling * (coord.y - 1.5f));
     }
 
     void generateDoors(){
@@ -644,8 +649,10 @@ public class Generator2D : MonoBehaviour {
                                     //transform.parent = Layer[layer].transform;
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
-                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                    makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door1.floor;
+                                    makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door1.to;
                                 }
                             }
                         }
@@ -687,8 +694,10 @@ public class Generator2D : MonoBehaviour {
                                     Debug.Log("add target door2 at " + allDoors[currentFloor].door2.to);
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
-                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                    makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door2.floor;
+                                    makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door2.to;
                                 }
                             }
                         }
@@ -729,8 +738,10 @@ public class Generator2D : MonoBehaviour {
                                     Debug.Log("add target door3 at " + allDoors[currentFloor].door3.to);
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
-                                    GameObject makedoor = Instantiate(doorObject, new Vector2(j * scaling, (k - 0.25f) * scaling), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                                    makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door3.floor;
+                                    makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door3.to;
                                 }
                             }
                         }
@@ -794,8 +805,10 @@ public class Generator2D : MonoBehaviour {
                                 allDoors[floor].door1.to = allDoors[target].door3.loc;      //[!!!]
                             }
                             Debug.Log(Layer[floor]);
-                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            GameObject makedoor = Instantiate(doorObject, new Vector3(i * scaling, (j - 0.25f) * scaling, -1), Quaternion.identity, Layer[floor].transform);//[]
                             makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                            makedoor.GetComponent<Door>().floorTarget = allDoors[floor].door1.floor;
+                            makedoor.GetComponent<Door>().coord = allDoors[floor].door1.to;
                         }
                     }
                 }
@@ -836,8 +849,10 @@ public class Generator2D : MonoBehaviour {
                                 allDoors[floor].door2.to = allDoors[target].door3.loc;      //[!!!]
                             }
                             Debug.Log(Layer[floor]);
-                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            GameObject makedoor = Instantiate(doorObject, new Vector3(i * scaling, (j - 0.25f) * scaling, -1), Quaternion.identity, Layer[floor].transform);//[]
                             makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                            makedoor.GetComponent<Door>().floorTarget = allDoors[floor].door2.floor;
+                            makedoor.GetComponent<Door>().coord = allDoors[floor].door2.to;
                         }
                     }
                 }
@@ -878,8 +893,10 @@ public class Generator2D : MonoBehaviour {
                                 allDoors[floor].door3.to = allDoors[target].door3.loc;      //[!!!]
                             }
                             Debug.Log(Layer[floor]);
-                            GameObject makedoor = Instantiate(doorObject, new Vector2(i * scaling, (j - 0.25f) * scaling), Quaternion.identity, Layer[floor].transform);//[]
+                            GameObject makedoor = Instantiate(doorObject, new Vector3(i * scaling, (j - 0.25f) * scaling, -1), Quaternion.identity, Layer[floor].transform);//[]
                             makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                            makedoor.GetComponent<Door>().floorTarget = allDoors[floor].door3.floor;
+                            makedoor.GetComponent<Door>().coord = allDoors[floor].door3.to;
                         }
                     }
                 }

@@ -469,10 +469,21 @@ MonoBehaviour:
   wallParent: {fileID: 1299085327}
   floorParent: {fileID: 169562921}
   scaling: 1
-  enemy: {fileID: 0}
+  enemy: {fileID: 1674925653376385782, guid: 940f3d153fc348f448a3146122cdf8b6, type: 3}
   enemyCount: 0
   tar: {x: 0, y: 0}
   randSpawn: 0
+  Layer:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   doorObject: {fileID: 1948624989328810794, guid: 6ee04d2efbabcc8459ef941c615dfc8e, type: 3}
   jmlDoor: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!4 &2019028955

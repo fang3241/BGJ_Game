@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Graphs;
+using UnityEngine.AI;
 
 public class Generator2D : MonoBehaviour {
     [SerializeField]
@@ -102,9 +103,15 @@ public class Generator2D : MonoBehaviour {
 
     public doorList[] allDoors = new doorList[10];
     public int[] jmlDoor = new int[10];
+    //public NavMeshSurface navMeshSurface;
 
 
     void Start() {
+        //navMeshSurface = GetComponentInChildren<NavMeshSurface>();
+        //if (navMeshSurface == null)
+        //{
+        //    Debug.LogError("NavMeshSurface component not found.");
+        //}
         for(int i = 0; i < 10; i++){
             Generate(i);
             jmlDoor[i] = 3;
@@ -115,6 +122,9 @@ public class Generator2D : MonoBehaviour {
         GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
         _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
         camera.GetComponent<CameraMovement>()._target = _player.transform;
+        for(int i = 0; i < 10; i++){
+            generateEnemy(Random.Range(5, 20), i);
+        }
     }
 
     void Generate(int layer) {
@@ -140,7 +150,6 @@ public class Generator2D : MonoBehaviour {
         Layer[layer].SetActive(false);
         drawFloor(layer);
         drawWall(layer);
-        //generateEnemy(enemyCount);
     }
 
     void PlaceRooms(int layer) {
@@ -597,6 +606,11 @@ public class Generator2D : MonoBehaviour {
                 Layer[i].SetActive(false);
             }
         }
+        //NavMeshSurface[] allNavMesh = Layer[layer].GetComponentsInChildren<NavMeshSurface>();
+        //foreach (NavMeshSurface navMesh in allNavMesh){
+        //    navMesh.BuildNavMesh();
+        //    Debug.Log(navMesh);
+        //}
     }
 
     public void tpPlayer(Vector2Int coord){
@@ -918,9 +932,11 @@ public class Generator2D : MonoBehaviour {
         }
     }
 
-    /*
-    void generateEnemy(int count){
-        for(int i = count; i > 0; i--){
+    
+    void generateEnemy(int count, int layer){
+        GameObject enem = Instantiate(enemy, new Vector2(0, 0), Quaternion.identity);
+        enem.GetComponent<Enemy>().player = GameObject.Find("Player(Clone)").GetComponent<Transform>();
+        /*for(int i = count; i > 0; i--){
             //pick random location
             tar = new Vector2Int(Random.Range(0,Generator2D.size.x), Random.Range(0,Generator2D.size.y));
             //check if not null
@@ -937,6 +953,6 @@ public class Generator2D : MonoBehaviour {
             }
             //spawn enemy, count -= 1
             //repeat until count = 0;
-        }
-    }*/
+        }*/
+    }
 }

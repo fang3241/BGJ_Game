@@ -175,6 +175,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
+  hitU: 0
+  hitD: 0
+  hitL: 0
+  hitR: 0
+  animator: {fileID: 0}
 --- !u!4 &502217338
 Transform:
   m_ObjectHideFlags: 0

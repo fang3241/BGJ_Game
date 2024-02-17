@@ -90,6 +90,8 @@ public class Generator2D : MonoBehaviour {
     [SerializeField]
     GameObject doorObject;
 
+    public List<GameObject> doors;
+
 
     public struct doorStats{
         public Vector2Int loc;
@@ -624,6 +626,7 @@ public class Generator2D : MonoBehaviour {
     }
 
     void generateDoors(){
+        doors = new List<GameObject>();
         int alreadyMade = 0;
         int currentFloor = 0;
         for(int i = 0; i < 10; i++){
@@ -669,6 +672,7 @@ public class Generator2D : MonoBehaviour {
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
                                     GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    doors.Add(makedoor);
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
                                     makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door1.floor;
                                     makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door1.to;
@@ -714,6 +718,7 @@ public class Generator2D : MonoBehaviour {
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
                                     GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    doors.Add(makedoor);
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
                                     makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door2.floor;
                                     makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door2.to;
@@ -758,6 +763,7 @@ public class Generator2D : MonoBehaviour {
                                     //_layer =  GameObject.Find("Layer" + currentFloor);
                                     Debug.Log(Layer[currentFloor]);
                                     GameObject makedoor = Instantiate(doorObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[currentFloor].transform);//[]
+                                    doors.Add(makedoor);
                                     makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
                                     makedoor.GetComponent<Door>().floorTarget = allDoors[currentFloor].door3.floor;
                                     makedoor.GetComponent<Door>().coord = allDoors[currentFloor].door3.to;
@@ -774,6 +780,11 @@ public class Generator2D : MonoBehaviour {
                     currentFloor++;
                 }
             }
+        }
+
+        foreach(GameObject d in doors)
+        {
+            Debug.Log("DOOR : " + d.transform.position);
         }
     }
 

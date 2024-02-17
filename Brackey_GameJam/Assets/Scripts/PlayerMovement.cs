@@ -15,11 +15,28 @@ public class PlayerMovement : MonoBehaviour
     public bool hitR = false; 
     public Animator animator;
 
+    public float doorCD = 2f;
+    public bool isDoorCD;
+
     // Start is called before the first frame update
     void Start()
     {
+        isDoorCD = false;
         _rb = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponentsInChildren<SpriteRenderer>();
+    }
+
+    public void StartCD()
+    {
+        StartCoroutine(Cooldown());
+    }
+
+    public IEnumerator Cooldown()
+    {
+        isDoorCD = true;
+        Debug.Log("COOLD");
+        yield return new WaitForSeconds(doorCD);
+        isDoorCD = false;
     }
 
     // Update is called once per frame

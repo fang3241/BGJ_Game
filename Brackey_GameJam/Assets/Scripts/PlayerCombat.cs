@@ -11,6 +11,8 @@ public class PlayerCombat : MonoBehaviour
 
     public float attackCooldown;
     public float weaponFollowSpeed;
+    public float scale;
+    public GameObject player;
 
     private float distance1, distance2;
 
@@ -51,6 +53,8 @@ public class PlayerCombat : MonoBehaviour
 
     void followCursor()
     {
+        transform.position = player.transform.position;
+
         if (!isAttack)
         {
             Vector3 mousePos = _cam.ScreenToWorldPoint(Input.mousePosition);
@@ -64,11 +68,13 @@ public class PlayerCombat : MonoBehaviour
 
             if (dir > 90 || dir < -90)
             {
-                transform.localScale = new Vector3(1, -1, 1);
+                transform.localScale = new Vector3(scale, -scale, scale);   //kalo ikhsan jadi +-+, kalo ahmad jadi -++//
+                //Debug.Log("-");
             }
             else
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(scale, scale, scale);
+                //Debug.Log("+");
             }
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, dir), weaponFollowSpeed * Time.deltaTime);

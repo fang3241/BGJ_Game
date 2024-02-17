@@ -33,6 +33,8 @@ public class Generator2D : MonoBehaviour {
     [SerializeField]
     public GameObject player;
     [SerializeField]
+    public GameObject weap;
+    [SerializeField]
     public static Vector2Int size;
     [SerializeField]
     Vector2Int losize;//40 x 40
@@ -120,7 +122,10 @@ public class Generator2D : MonoBehaviour {
         printDoors();
         changeLayer(9);
         GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
+        GameObject _weapon = Instantiate(weap, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
         _player.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
+        _weapon.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
+        _weapon.GetComponent<PlayerCombat>().player = _player;
         camera.GetComponent<CameraMovement>()._target = _player.transform;
         for(int i = 0; i < 10; i++){
             generateEnemy(Random.Range(5, 20), i);

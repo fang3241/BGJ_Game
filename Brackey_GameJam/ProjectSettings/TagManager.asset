@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Border
+  - PlayerWeapon
   layers:
   - Default
   - TransparentFX

@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
     public Transform player; // Reference to the player's transform
-    public float chaseRadius = 5f; // Radius within which the enemy will start chasing the player
+    public float chaseRadius = 15f; // Radius within which the enemy will start chasing the player
+    public float atkRaduis = 3f;
     public float rotationSpeed = 5f;
     public float speed = 3f; // Speed at which the enemy moves
     private Rigidbody2D rb;
@@ -13,6 +15,10 @@ public class Enemy : MonoBehaviour
     public bool bKanan = false;
     public bool bKiri = false;
     int rott = 1;
+
+    public bool isAttack;
+    public float attackCooldown;
+    public Animator anim;
 
     void Start()
     {
@@ -38,6 +44,12 @@ public class Enemy : MonoBehaviour
             rb.velocity = direction * speed;
             //Debug.Log(agent);
             //agent.SetDestination(player.position);
+            if(distanceToPlayer <= atkRaduis){
+                //attack
+                isAttack = true;
+                anim.SetTrigger("Attack");
+                StartCoroutine(DelayAttack(attackCooldown));
+            }
         }
         else
         {
@@ -101,5 +113,11 @@ public class Enemy : MonoBehaviour
         {
             return false;
         }
+    }
+
+    IEnumerator DelayAttack(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isAttack = false;
     }
 }

@@ -453,6 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 381423188}
   player: {fileID: 834081202382187383, guid: 4c5e7cd6c2478b442a175131263fd94b, type: 3}
+  weap: {fileID: 610597570140566823, guid: e1725b9ca1fe8224eaaac39f2c7b4f50, type: 3}
   losize: {x: 40, y: 40}
   roomCount: 100
   roomMaxSize: {x: 6, y: 6}

@@ -25,6 +25,13 @@ public class Enemy : MonoBehaviour
     public EnemyHPSlider hpSlider;
     private float maxHP;
 
+    public float alertToIdle;
+    public float alertCD;
+    public bool isIdle = true;
+    public float waitCD;
+    public float waitRange;
+    Vector2Int targetWalk;
+
     private void Awake()
     {
         hpSlider = GetComponent<EnemyHPSlider>();
@@ -77,7 +84,86 @@ public class Enemy : MonoBehaviour
         else
         {
             // Stop chasing if the player is out of range or not in front of the enemy
-            rb.velocity = Vector2.zero;
+            //rb.velocity = Vector2.zero;
+            //
+            if(alertCD <= 0){
+                isIdle = true;
+                alertCD = Random.Range(0, alertToIdle);
+            }
+            if(isIdle == true){
+                //wait -> roam -> wait -> roam
+                if(waitCD >= 0){
+                    waitCD -= Time.deltaTime;
+                    //rb.velocity = Vector2.zero; 
+                    if(bKanan == true){
+                        //float angle = Mathf.Deg2Rad * transform.rotation.z;
+                        //rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
+                        rb.velocity = Vector2.zero;
+                        Vector3 currentRotation = transform.rotation.eulerAngles;
+
+                        // Add 180 degrees to the current rotation
+                        currentRotation.z += 180f;
+
+                        // Apply the new rotation to the GameObject
+                        transform.rotation = Quaternion.Euler(currentRotation);
+                        alertCD = 0;
+                    }
+                    if(bKiri == true){
+                        //float angle = Mathf.Deg2Rad * transform.rotation.z;
+                        //rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
+                        rb.velocity = Vector2.zero;
+                        Vector3 currentRotation = transform.rotation.eulerAngles;
+
+                        // Add 180 degrees to the current rotation
+                        currentRotation.z += 180f;
+
+                        // Apply the new rotation to the GameObject
+                        transform.rotation = Quaternion.Euler(currentRotation);
+                        alertCD = 0;
+                    }
+                }
+                else{
+                    // func() raytrace to coord, if not hit wall, walk to there
+                    isIdle = false;
+                    //targetWalk = cektarget();
+
+                    float Aangle = Random.Range(0f, 360f);
+                    Vector3 currentRotation = transform.rotation.eulerAngles;
+                    // Add 180 degrees to the current rotation
+                    currentRotation.z += Aangle;
+                    // Apply the new rotation to the GameObject
+                    transform.rotation = Quaternion.Euler(currentRotation);
+                    Vector2 direction = new Vector2(Mathf.Cos(Aangle * Mathf.Deg2Rad), Mathf.Sin(Aangle * Mathf.Deg2Rad));
+                    rb.velocity = transform.right * speed;
+                    float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+
+
+                    Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                    // Convert the angle to a direction vector
+                    //Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+
+                    // Add velocity to the Rigidbody2D in the randomized direction
+                    //rb.velocity = direction * speed;
+                    alertCD = Random.Range(0, alertToIdle);
+
+                    /*
+                    Vector2 direction = (targetWalk - new Vector2(transform.position.x, transform.position.y)).normalized;
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    rb.velocity = direction * speed;
+                    */
+                    
+                }
+            }
+            else{
+                //if(Vector2.Distance(targetWalk, new Vector2(transform.position.x, transform.position.y)) <= 1f){//[]
+                    waitCD = Random.Range(0, waitRange);
+                    isIdle = true;
+                //}
+            }
         }
         //
         if(player.position.y > transform.position.y){
@@ -95,6 +181,7 @@ public class Enemy : MonoBehaviour
             float angle = Mathf.Deg2Rad * transform.rotation.z;
             rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
         }
+        
     }
 
     // Check if the player is in front of the enemy
@@ -143,4 +230,37 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(time);
         isAttack = false;
     }
+
+    /*
+    Vector2Int cektarget() {
+        bool aman = true;
+        List<string> hitTags = new List<string>();
+        Vector2Int _t = Vector2Int.zero; // Initialize _t
+        Vector2Int target = new Vector2Int(Random.Range(0, 40 * 3), Random.Range(0, 40 * 3));
+        Vector2 directionToPlayer = targetWalk - new Vector2(transform.position.x, transform.position.y);
+        float angle = Vector2.Angle(transform.right, directionToPlayer);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, (Vector2)target - (Vector2)transform.position, Vector2.Distance(transform.position, target));
+        Debug.DrawRay(transform.position, (Vector2)target - (Vector2)transform.position, Color.red);
+    
+        foreach (RaycastHit2D hit in hits) {
+            if (hit.collider != null) {
+                Debug.Log("Raycast hit " + hit.collider);
+                hitTags.Add(hit.collider.tag);
+                if (hit.collider.CompareTag("Border")) {
+                    aman = false;
+                    break; // Exit the loop, no need to continue
+                }
+            }
+        }
+
+        if (!aman) {
+            _t = cektarget(); // Recursive call
+        } else {
+            _t = target;
+        }
+
+        return _t;
+    }
+    */
+
 }

@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 7377031724287166013}
   m_Layer: 0
   m_Name: borderKiri
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -570,6 +570,11 @@ MonoBehaviour:
   anim: {fileID: 3359943606176298021}
   enemyHP: 2
   hpSlider: {fileID: 8664507412786326329}
+  alertToIdle: 7
+  alertCD: 0
+  isIdle: 1
+  waitCD: 0
+  waitRange: 7
 --- !u!50 &3988891143439180181
 Rigidbody2D:
   serializedVersion: 4
@@ -643,7 +648,7 @@ GameObject:
   - component: {fileID: 6404364547451728525}
   m_Layer: 0
   m_Name: borderKanan
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

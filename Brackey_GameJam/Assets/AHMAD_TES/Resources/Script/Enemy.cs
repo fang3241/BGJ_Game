@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
 
+[RequireComponent(typeof(EnemyHPSlider))]
 public class Enemy : MonoBehaviour
 {
     public Transform player; // Reference to the player's transform
@@ -20,11 +21,33 @@ public class Enemy : MonoBehaviour
     public float attackCooldown;
     public Animator anim;
 
+    public float enemyHP;
+    public EnemyHPSlider hpSlider;
+    private float maxHP;
+
+    private void Awake()
+    {
+        hpSlider = GetComponent<EnemyHPSlider>();
+        maxHP = enemyHP;
+        hpSlider.enemyHpSlider.maxValue = maxHP;
+        hpSlider.enemyHpSlider.value = maxHP;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = GameObject.Find("Player(Clone)").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         //agent = GetComponent<NavMeshAgent>();
+        
+    }
+    
+    public void TakeDamage(float dmg)
+    {
+        hpSlider.TakeDamage(enemyHP, dmg);
+        enemyHP--;
+        
+        Debug.Log(enemyHP);
+        
     }
 
     void Update()

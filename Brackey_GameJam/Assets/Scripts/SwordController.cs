@@ -9,15 +9,20 @@ public class SwordController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log(collision.name);
-        Rigidbody2D enemyRB = collision.GetComponent<Rigidbody2D>();
+        if (collision.CompareTag("Enemy"))
+        {
+            Rigidbody2D enemyRB = collision.GetComponent<Rigidbody2D>();
 
-        enemyRB.isKinematic = false;
+            enemyRB.isKinematic = false;
 
-        Vector2 direction = enemyRB.transform.position - transform.position;
-        direction = direction.normalized * knockback;
+            Vector2 direction = enemyRB.transform.position - transform.position;
+            direction = direction.normalized * knockback;
 
-        enemyRB.AddForce(direction, ForceMode2D.Impulse);
-        StartCoroutine(KnockTime(knockTime, enemyRB));
+            enemyRB.AddForce(direction, ForceMode2D.Impulse);
+            enemyRB.GetComponent<Enemy>().TakeDamage(1);
+            StartCoroutine(KnockTime(knockTime, enemyRB));
+        }
+
     }
 
     IEnumerator KnockTime(float time, Rigidbody2D rb)

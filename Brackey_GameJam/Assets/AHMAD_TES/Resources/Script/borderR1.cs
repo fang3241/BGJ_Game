@@ -6,6 +6,8 @@ public class borderR1 : MonoBehaviour
 
     // Define the value you want to change in the parent
     public bool hitR;
+    public bool isKanan;
+    public bool isKiri;
 
     void Start()
     {
@@ -20,11 +22,12 @@ public class borderR1 : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and change its value
-            transform.parent.GetComponent<Enemy>().hitR = true; // Replace YourParentScript and hitR with your actual script and value names
-        }
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            transform.parent.GetComponent<Enemy>().hitR = false;
+            if(isKiri == true){
+                transform.parent.GetComponent<Enemy>().bKanan = true; // Replace YourParentScript and hitR with your actual script and value names
+            }
+            if(isKanan == true){
+                transform.parent.GetComponent<Enemy>().bKiri = true; // Replace YourParentScript and hitR with your actual script and value names
+            }
         }
     }
 
@@ -35,7 +38,12 @@ public class borderR1 : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and change its value
-            transform.parent.GetComponent<Enemy>().hitR = true; // Replace YourParentScript and hitR with your actual script and value names
+            if(isKiri == true){
+                transform.parent.GetComponent<Enemy>().bKanan = true; // Replace YourParentScript and hitR with your actual script and value names
+            }
+            if(isKanan == true){
+                transform.parent.GetComponent<Enemy>().bKiri = true; // Replace YourParentScript and hitR with your actual script and value names
+            }
         }
     }
 
@@ -46,7 +54,12 @@ public class borderR1 : MonoBehaviour
         if (collision.gameObject.CompareTag("Border"))
         {
             // Access the parent GameObject and reset its value
-            transform.parent.GetComponent<Enemy>().hitR = false; // Replace YourParentScript and hitR with your actual script and value names
+            if(isKiri == true){
+                transform.parent.GetComponent<Enemy>().bKanan = false; // Replace YourParentScript and hitR with your actual script and value names
+            }
+            if(isKanan == true){
+                transform.parent.GetComponent<Enemy>().bKiri = false; // Replace YourParentScript and hitR with your actual script and value names
+            }
         }
     }
 }

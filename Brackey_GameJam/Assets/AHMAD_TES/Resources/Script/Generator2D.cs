@@ -934,17 +934,15 @@ public class Generator2D : MonoBehaviour {
 
     
     void generateEnemy(int count, int layer){
-        GameObject enem = Instantiate(enemy, new Vector2(0, 0), Quaternion.identity);
-        enem.GetComponent<Enemy>().player = GameObject.Find("Player(Clone)").GetComponent<Transform>();
-        /*for(int i = count; i > 0; i--){
+        for(int i = count; i > 0; i--){
             //pick random location
             tar = new Vector2Int(Random.Range(0,Generator2D.size.x), Random.Range(0,Generator2D.size.y));
             //check if not null
             if(Generator2D.grid[layer][tar] != CellType.None){
                 Debug.Log("spawn enemy at " + Generator2D.grid[layer][tar]);
-                GameObject enem = Instantiate(enemy, new Vector3((tar.x + 0.5f) * scaling, 0.5f, (tar.y + 0.5f) * scaling), Quaternion.identity);
-                enem.GetComponent<Transform>().localScale = new Vector3(1.5f, 1.5f, 1.5f); 
-                enem.GetComponent<Transform>().Rotate(0f, Random.Range(0f,360f), 0f);
+                GameObject enem = Instantiate(enemy, new Vector2(tar.x, tar.y), Quaternion.identity, Layer[layer].transform);
+                enem.GetComponent<Transform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                enem.GetComponent<Enemy>().player = GameObject.Find("Player(Clone)").GetComponent<Transform>();
                 //enem.GetComponent<MeshRenderer>().material = purpleMaterial;
             }
             else{
@@ -953,6 +951,6 @@ public class Generator2D : MonoBehaviour {
             }
             //spawn enemy, count -= 1
             //repeat until count = 0;
-        }*/
+        }
     }
 }

@@ -10,7 +10,9 @@ public class Enemy : MonoBehaviour
     public float speed = 3f; // Speed at which the enemy moves
     private Rigidbody2D rb;
     NavMeshAgent agent;
-    public bool hitR = false;
+    public bool bKanan = false;
+    public bool bKiri = false;
+    int rott = 1;
 
     void Start()
     {
@@ -43,9 +45,20 @@ public class Enemy : MonoBehaviour
             rb.velocity = Vector2.zero;
         }
         //
-        if(hitR == true){
-            Vector2 direction = (player.position - transform.position).normalized;
-            rb.velocity = direction * speed * -2;
+        if(player.position.y > transform.position.y){
+            rott = 1;
+        }
+        else{
+            rott = -1;
+        }
+        //
+        if(bKanan == true){
+            float angle = Mathf.Deg2Rad * transform.rotation.z;
+            rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
+        }
+        if(bKiri == true){
+            float angle = Mathf.Deg2Rad * transform.rotation.z;
+            rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
         }
     }
 

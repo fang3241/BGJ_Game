@@ -56,4 +56,9 @@ public class ButtonNav : MonoBehaviour
         
         
     }
+
+    public string GetCurrentScene()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
 }

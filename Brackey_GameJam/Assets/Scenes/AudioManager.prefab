@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1438855384216753828
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1438855384216753826}
+  - component: {fileID: 1438855384216753827}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1438855384216753826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438855384216753828}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.431984, y: 34.003826, z: -0.1855343}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1438855384216753827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438855384216753828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85747c8e59c22645b8033d395f9dc0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: BGM_01
+    clip: {fileID: 8300000, guid: a698c4fddba2543d19a42ab49d17b33a, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: SwordHit
+    clip: {fileID: 8300000, guid: d64e91cef03af304fa237225b23c5707, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: SwordEnemyHit
+    clip: {fileID: 8300000, guid: f066f3ebedc79dc429b921d5076e5491, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: BGM_03
+    clip: {fileID: 8300000, guid: ba30d58faf08e47328cfb48719afca8e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: Dead_BGM
+    clip: {fileID: 8300000, guid: 84389687547e6475e84d4f082b0592a2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: WinBGM
+    clip: {fileID: 8300000, guid: cb2e6185c236644fd86471598e62b12b, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: BGM_02
+    clip: {fileID: 8300000, guid: 7007dc9c5c6444970bdc37bd2b81721e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}
+  - name: Heal
+    clip: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+    group: {fileID: 24300002, guid: 5c19e1f2b6a977b4b8f19a666f68200b, type: 2}

@@ -27,6 +27,7 @@ public class Exit : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("FINISH");
+            AudioManager.instance.StopAllandPlay("WinBGM");
             SceneManager.LoadScene("WIN");
         }
             

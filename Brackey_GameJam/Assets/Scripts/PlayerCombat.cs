@@ -41,6 +41,7 @@ public class PlayerCombat : MonoBehaviour
     private void Attack()
     {
         isAttack = true;
+        AudioManager.instance.Play("SwordHit");
         anim.SetTrigger("Attack");
         StartCoroutine(DelayAttack(attackCooldown));
     }

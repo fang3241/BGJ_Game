@@ -88,6 +88,7 @@ public class Enemy : MonoBehaviour
             if(distanceToPlayer <= atkRaduis && !isAttack){
                 //attack
                 isAttack = true;
+                AudioManager.instance.Play("SwordEnemyHit");
                 anim.SetTrigger("Attack");
                 StartCoroutine(DelayAttack(attackCooldown));
             }

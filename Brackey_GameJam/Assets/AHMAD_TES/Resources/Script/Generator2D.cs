@@ -137,6 +137,8 @@ public class Generator2D : MonoBehaviour {
         for(int i = 0; i < 10; i++){
             generateEnemy(Random.Range(5, 20), i);
         }
+
+        AudioManager.instance.StopAllandPlay("BGM_03");
     }
 
     void Generate(int layer) {

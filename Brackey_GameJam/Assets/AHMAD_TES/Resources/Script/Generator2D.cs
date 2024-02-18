@@ -91,6 +91,8 @@ public class Generator2D : MonoBehaviour {
     GameObject doorObject;
     [SerializeField]
     GameObject doorFObject;
+    [SerializeField]
+    GameObject healthDrop;
 
     public List<GameObject> doors;
 
@@ -160,6 +162,7 @@ public class Generator2D : MonoBehaviour {
         Layer[layer].SetActive(false);
         drawFloor(layer);
         drawWall(layer);
+        generateHealth(layer);
     }
 
     void PlaceRooms(int layer) {
@@ -979,6 +982,33 @@ public class Generator2D : MonoBehaviour {
             Debug.Log("[Door2]" + allDoors[i].door2.loc + ", " + allDoors[i].door2.floor + ", " + allDoors[i].door2.to);
             Debug.Log("[Door3]" + allDoors[i].door3.loc + ", " + allDoors[i].door3.floor + ", " + allDoors[i].door3.to);
             Debug.Log("///");
+        }
+    }
+
+    public void generateHealth(int layer){
+        int validWall = 0;
+        for(int j = 0; j < losize.x; j++){
+            for(int k = 1; k < losize.y; k++){
+                if(Generator2D.grid[layer][new Vector2Int((int)j, (int)k)] != CellType.None){
+                    validWall++;
+                }
+            }
+        }
+        //random xWall(0, validWall)
+        int wallToDoor = Random.Range(0, validWall);
+        //loop this layer, xWall-- for each wall with y+1 room,
+        for(int j = 0; j < losize.x; j++){
+            for(int k = 1; k < losize.y; k++){
+                if(Generator2D.grid[layer][new Vector2Int((int)j, (int)k)] != CellType.None){
+                    wallToDoor--;
+                    if(wallToDoor == 0){
+                        Debug.Log("add exit at " + j + ", " + k);
+                        Generator2D.grid[layer][new Vector2Int((int)j, (int)k)] = CellType.XDoor;
+                        GameObject healthh = Instantiate(healthDrop, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[layer].transform);//[]
+                        healthh.GetComponent<Transform>().localScale = new Vector2(scaling * 0.5f, scaling * 0.5f);
+                    }
+                }
+            }
         }
     }
 

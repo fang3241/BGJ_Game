@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour
     public float waitRange;
     Vector2Int targetWalk;
     bool hitBorder = false  ;
+    Transform flipOnly;
 
 
     public bool enemyReady;
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         //agent = GetComponent<NavMeshAgent>();
+        flipOnly = this.transform.Find("flipOnly");
         
     }
     
@@ -73,6 +75,7 @@ public class Enemy : MonoBehaviour
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            flipOnly.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime * -1);
 
             // Move towards the player
             rb.velocity = direction * speed;
@@ -110,6 +113,7 @@ public class Enemy : MonoBehaviour
 
                         // Apply the new rotation to the GameObject
                         transform.rotation = Quaternion.Euler(currentRotation);
+                        flipOnly.rotation = Quaternion.Euler(currentRotation * -1);
                         alertCD = 0;
                     }
                     if(bKiri == true){
@@ -123,6 +127,7 @@ public class Enemy : MonoBehaviour
 
                         // Apply the new rotation to the GameObject
                         transform.rotation = Quaternion.Euler(currentRotation);
+                        flipOnly.rotation = Quaternion.Euler(currentRotation * -1);
                         alertCD = 0;
                     }
                 }
@@ -150,6 +155,7 @@ public class Enemy : MonoBehaviour
                     currentRotation.z += Aangle;
                     // Apply the new rotation to the GameObject
                     transform.rotation = Quaternion.Euler(currentRotation);
+                    flipOnly.rotation = Quaternion.Euler(currentRotation * -1);
                     Vector2 direction = new Vector2(Mathf.Cos(Aangle * Mathf.Deg2Rad), Mathf.Sin(Aangle * Mathf.Deg2Rad));
                     rb.velocity = transform.right * speed;
                     float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
@@ -157,6 +163,7 @@ public class Enemy : MonoBehaviour
 
                     Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    flipOnly.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime * -1);
                     if(hitBorder == true){
                         //angle = Mathf.Deg2Rad * transform.rotation.z;
                         //rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
@@ -206,7 +213,15 @@ public class Enemy : MonoBehaviour
             //float angle = Mathf.Deg2Rad * transform.rotation.z;
             //rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
         //}
+
         
+        
+        if(rb.velocity.x < 0){
+            flipOnly.localScale = new Vector3(-flipOnly.localScale.x, flipOnly.localScale.y, flipOnly.localScale.z);
+        }
+        else{
+            flipOnly.localScale = new Vector3(flipOnly.localScale.x, flipOnly.localScale.y, flipOnly.localScale.z);
+        }
     }
 
     // Check if the player is in front of the enemy
@@ -275,7 +290,7 @@ public class Enemy : MonoBehaviour
             {
                 Debug.Log(collision.tag);
                 Debug.Log("KILL");
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
             }
            
         }

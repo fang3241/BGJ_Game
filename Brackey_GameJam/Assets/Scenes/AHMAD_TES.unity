@@ -171,10 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -676,17 +676,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
-      propertyPath: bgred
-      value: 
-      objectReference: {fileID: 7900596227100710380, guid: 5f5cd4b7dc39c824fb22680e37b6d290, type: 3}
-    - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
-      propertyPath: gameOver
-      value: 
-      objectReference: {fileID: 7900596227100710380, guid: 5f5cd4b7dc39c824fb22680e37b6d290, type: 3}
-    - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
       propertyPath: canvasTransform
       value: 
       objectReference: {fileID: 142290683}
+    - target: {fileID: 6977404590122114659, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6977404590272777706, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

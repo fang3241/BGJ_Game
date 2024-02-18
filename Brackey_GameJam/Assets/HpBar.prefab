@@ -526,3 +526,6 @@ MonoBehaviour:
   currentHP: 0
   beginColor: {r: 0, g: 0, b: 0, a: 0}
   endColor: {r: 0, g: 0, b: 0, a: 0}
+  bgred: {fileID: 4607313277930606470, guid: 8abe7d61cb8aadf47a127cc9465be6f6, type: 3}
+  gameOver: {fileID: 7900596227100710380, guid: 5f5cd4b7dc39c824fb22680e37b6d290, type: 3}
+  canvasTransform: {fileID: 0}

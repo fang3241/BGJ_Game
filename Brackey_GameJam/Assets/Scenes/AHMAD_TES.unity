@@ -199,7 +199,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -618,6 +618,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
+      propertyPath: bgred
+      value: 
+      objectReference: {fileID: 7900596227100710380, guid: 5f5cd4b7dc39c824fb22680e37b6d290, type: 3}
+    - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
+      propertyPath: gameOver
+      value: 
+      objectReference: {fileID: 7900596227100710380, guid: 5f5cd4b7dc39c824fb22680e37b6d290, type: 3}
+    - target: {fileID: 5030204792537331389, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
+      propertyPath: canvasTransform
+      value: 
+      objectReference: {fileID: 142290683}
     - target: {fileID: 6977404590272777706, guid: 96747a422a6eedc4cad9778f64daea12, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

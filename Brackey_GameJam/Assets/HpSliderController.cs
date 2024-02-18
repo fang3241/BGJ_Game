@@ -50,6 +50,7 @@ public class HpSliderController : MonoBehaviour
           {
               currentHP = val;
               hpSlider.value = currentHP;
+              player.playerHP = currentHP;
           });
     }
     

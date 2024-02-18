@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
     public float waitCD;
     public float waitRange;
     Vector2Int targetWalk;
+    bool hitBorder = false  ;
 
     private void Awake()
     {
@@ -98,7 +99,7 @@ public class Enemy : MonoBehaviour
                     if(bKanan == true){
                         //float angle = Mathf.Deg2Rad * transform.rotation.z;
                         //rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
-                        rb.velocity = Vector2.zero;
+                        //rb.velocity = Vector2.zero;
                         Vector3 currentRotation = transform.rotation.eulerAngles;
 
                         // Add 180 degrees to the current rotation
@@ -111,7 +112,7 @@ public class Enemy : MonoBehaviour
                     if(bKiri == true){
                         //float angle = Mathf.Deg2Rad * transform.rotation.z;
                         //rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
-                        rb.velocity = Vector2.zero;
+                        //rb.velocity = Vector2.zero;
                         Vector3 currentRotation = transform.rotation.eulerAngles;
 
                         // Add 180 degrees to the current rotation
@@ -127,7 +128,20 @@ public class Enemy : MonoBehaviour
                     isIdle = false;
                     //targetWalk = cektarget();
 
-                    float Aangle = Random.Range(0f, 360f);
+                    float Aangle = 0;
+                    int xr = Random.Range(0,4);
+                    if(xr == 0){
+                        Aangle = 0f;
+                    }
+                    if(xr == 1){
+                        Aangle = 90f;
+                    }
+                    if(xr == 2){
+                        Aangle = 180f;
+                    }
+                    if(xr == 3){
+                        Aangle = 270f;
+                    }
                     Vector3 currentRotation = transform.rotation.eulerAngles;
                     // Add 180 degrees to the current rotation
                     currentRotation.z += Aangle;
@@ -140,6 +154,12 @@ public class Enemy : MonoBehaviour
 
                     Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    if(hitBorder == true){
+                        //angle = Mathf.Deg2Rad * transform.rotation.z;
+                        //rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
+                        rb.velocity = rb.velocity * -1;
+                        hitBorder = false;
+                    }
 
                     // Convert the angle to a direction vector
                     //Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
@@ -173,14 +193,16 @@ public class Enemy : MonoBehaviour
             rott = -1;
         }
         //
-        if(bKanan == true){
+        if(hitBorder == true){
             float angle = Mathf.Deg2Rad * transform.rotation.z;
-            rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
+            //rb.velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * speed * rott;
+            rb.velocity = rb.velocity * -1;
+            hitBorder = false;
         }
-        if(bKiri == true){
-            float angle = Mathf.Deg2Rad * transform.rotation.z;
-            rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
-        }
+        //if(bKiri == true){
+            //float angle = Mathf.Deg2Rad * transform.rotation.z;
+            //rb.velocity = new Vector2(-Mathf.Cos(angle), -Mathf.Sin(angle)) * speed * rott;
+        //}
         
     }
 
@@ -229,6 +251,16 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         isAttack = false;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        //Debug.Log("inc");
+        // Check if the colliding object has the specified tag
+        if (collision.gameObject.CompareTag("Border"))
+        {
+            hitBorder = true;
+        }
     }
 
     /*

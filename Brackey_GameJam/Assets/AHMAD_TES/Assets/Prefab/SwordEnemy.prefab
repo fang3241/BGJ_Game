@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 610597570140566821}
   m_Layer: 0
   m_Name: SwordEnemy
-  m_TagString: PlayerWeapon
+  m_TagString: EnemyWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 610597570683825696}
   m_Layer: 0
   m_Name: Sword
-  m_TagString: Untagged
+  m_TagString: EnemyWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

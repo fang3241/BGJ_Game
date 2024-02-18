@@ -1023,6 +1023,7 @@ public class Generator2D : MonoBehaviour {
                 GameObject enem = Instantiate(enemy, new Vector2(tar.x, tar.y), Quaternion.identity, Layer[layer].transform);
                 enem.GetComponent<Transform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 enem.GetComponent<Enemy>().player = GameObject.Find("Player(Clone)").GetComponent<Transform>();
+                enem.GetComponent<Enemy>().enemyReady = true;
                 //enem.GetComponent<MeshRenderer>().material = purpleMaterial;
             }
             else{

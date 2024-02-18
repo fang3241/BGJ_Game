@@ -33,8 +33,11 @@ public class Enemy : MonoBehaviour
     Vector2Int targetWalk;
     bool hitBorder = false  ;
 
+
+    public bool enemyReady;
     private void Awake()
     {
+        enemyReady = false;
         hpSlider = GetComponent<EnemyHPSlider>();
         maxHP = enemyHP;
         hpSlider.enemyHpSlider.maxValue = maxHP;
@@ -265,10 +268,18 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Floor"))
+        if (enemyReady)
         {
-            Destroy(this.gameObject);
+            Debug.Log(this.name + " " + enemyReady);
+            if (!collision.CompareTag("Floor"))
+            {
+                Debug.Log(collision.tag);
+                Debug.Log("KILL");
+                Destroy(this.gameObject);
+            }
+           
         }
+        
     }
 
 

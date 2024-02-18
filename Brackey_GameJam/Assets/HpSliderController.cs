@@ -12,13 +12,16 @@ public class HpSliderController : MonoBehaviour
     private float maxHP;
     [SerializeField]
     private float currentHP;
+    PlayerMovement player;
 
     public Color beginColor;
     public Color endColor;
+
     
-    // Start is called before the first frame update
-    void Start()
+    public void Setup(PlayerMovement pl, float hp)
     {
+        player = pl;
+        maxHP = hp;
         currentHP = maxHP;
         hpSlider.maxValue = maxHP;
         hpSlider.value = maxHP;
@@ -37,6 +40,7 @@ public class HpSliderController : MonoBehaviour
         {
             currentHP = val;
             hpSlider.value = currentHP;
+            player.playerHP = currentHP;
         });
     }
 

@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public bool hitR = false; 
     public Animator animator;
 
+    public float playerHP;
     public float doorCD = 2f;
     public bool isDoorCD;
 
@@ -24,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
         isDoorCD = false;
         _rb = GetComponent<Rigidbody2D>();
         mySpriteRenderer = GetComponentsInChildren<SpriteRenderer>();
+
+        HpSliderController hp = FindAnyObjectByType<HpSliderController>();
+        hp.Setup(this, playerHP);
     }
 
     public void StartCD()

@@ -11,9 +11,20 @@ public class ButtonNav : MonoBehaviour
     {
         //isi nama scene nya
         MainMenu,
+        StoryStart,
+        AHMAD_TES,
         
     };
 
+    public void toGame()
+    {
+        SceneManager.LoadScene(FloorName.AHMAD_TES.ToString());
+    }
+
+    public void toStory()
+    {
+        SceneManager.LoadScene(FloorName.StoryStart.ToString());
+    }
 
     public void ToMenu()
     {

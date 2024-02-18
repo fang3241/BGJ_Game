@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour
             rb.velocity = direction * speed;
             //Debug.Log(agent);
             //agent.SetDestination(player.position);
-            if(distanceToPlayer <= atkRaduis){
+            if(distanceToPlayer <= atkRaduis && !isAttack){
                 //attack
                 isAttack = true;
                 anim.SetTrigger("Attack");
@@ -222,7 +222,7 @@ public class Enemy : MonoBehaviour
             foreach (RaycastHit2D hit in hits)
             {
                 if(hit.collider != null){
-                    Debug.Log("Raycast hit " + hit.collider);
+                    //Debug.Log("Raycast hit " + hit.collider);
                     hitTags.Add(hit.collider.tag);
                     if(hit.collider.CompareTag("Border")){
                         return false;

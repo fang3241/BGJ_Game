@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2211006651341689447}
   - component: {fileID: 3321615965835849497}
   - component: {fileID: 5456319527432492787}
+  - component: {fileID: -4982760318959916508}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -57,6 +58,9 @@ MonoBehaviour:
   hitL: 1
   hitR: 0
   animator: {fileID: 74722465113884810}
+  playerHP: 10
+  doorCD: 2
+  isDoorCD: 0
 --- !u!50 &3321615965835849497
 Rigidbody2D:
   serializedVersion: 4
@@ -98,6 +102,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!61 &-4982760318959916508
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834081202382187383}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.0025150478}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.2464738}
+  m_EdgeRadius: 0
 --- !u!1 &1754208347238781651
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +141,7 @@ GameObject:
   - component: {fileID: 9158632981904532335}
   m_Layer: 0
   m_Name: borderU
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -183,7 +213,7 @@ GameObject:
   - component: {fileID: 5681602299319786558}
   m_Layer: 0
   m_Name: borderL
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -255,7 +285,7 @@ GameObject:
   - component: {fileID: 1269555195110003751}
   m_Layer: 0
   m_Name: borderR
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -432,7 +462,7 @@ GameObject:
   - component: {fileID: 6731896291937762727}
   m_Layer: 0
   m_Name: borderD
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

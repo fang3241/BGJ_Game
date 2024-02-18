@@ -89,6 +89,8 @@ public class Generator2D : MonoBehaviour {
     GameObject _layer;
     [SerializeField]
     GameObject doorObject;
+    [SerializeField]
+    GameObject doorFObject;
 
     public List<GameObject> doors;
 
@@ -122,6 +124,7 @@ public class Generator2D : MonoBehaviour {
         }
         generateDoors();
         printDoors();
+        generateExit();
         changeLayer(9);
         GameObject _player = Instantiate(player, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
         GameObject _weapon = Instantiate(weap, new Vector2(spawnPoint.x * scaling, (spawnPoint.y) * scaling), Quaternion.identity);
@@ -785,6 +788,37 @@ public class Generator2D : MonoBehaviour {
         foreach(GameObject d in doors)
         {
             Debug.Log("DOOR : " + d.transform.position);
+        }
+    }
+
+    void generateExit(){
+        int validWall = 0;
+        for(int j = 0; j < losize.x; j++){
+            for(int k = 1; k < losize.y; k++){
+                if(Generator2D.grid[0][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[0][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                    if((allDoors[0].door1.loc != new Vector2Int((int)j, (int)k)) && (allDoors[0].door2.loc != new Vector2Int((int)j, (int)k)) && (allDoors[0].door3.loc != new Vector2Int((int)j, (int)k))){
+                        validWall++;
+                    }
+                }
+            }
+        }
+        //random xWall(0, validWall)
+        int wallToDoor = Random.Range(0, validWall);
+        //loop this layer, xWall-- for each wall with y+1 room,
+        for(int j = 0; j < losize.x; j++){
+            for(int k = 1; k < losize.y; k++){
+                if(Generator2D.grid[0][new Vector2Int((int)j, (int)k)] == CellType.None && Generator2D.grid[0][new Vector2Int((int)j, (int)k - 1)] == CellType.Room){
+                    if((allDoors[0].door1.loc != new Vector2Int((int)j, (int)k)) && (allDoors[0].door2.loc != new Vector2Int((int)j, (int)k)) && (allDoors[0].door3.loc != new Vector2Int((int)j, (int)k))){
+                        wallToDoor--;
+                        if(wallToDoor == 0){
+                                    Debug.Log("add exit at " + j + ", " + k);
+                                    Generator2D.grid[0][new Vector2Int((int)j, (int)k)] = CellType.XDoor;
+                                    GameObject makedoor = Instantiate(doorFObject, new Vector3(j * scaling, (k - 0.25f) * scaling, -1), Quaternion.identity, Layer[0].transform);//[]
+                                    makedoor.GetComponent<Transform>().localScale = new Vector2(scaling, scaling);
+                        }
+                    }
+                }
+            }
         }
     }
 

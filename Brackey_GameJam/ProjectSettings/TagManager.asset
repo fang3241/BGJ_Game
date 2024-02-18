@@ -8,6 +8,7 @@ TagManager:
   - Border
   - PlayerWeapon
   - Enemy
+  - EnemyWeapon
   layers:
   - Default
   - TransparentFX

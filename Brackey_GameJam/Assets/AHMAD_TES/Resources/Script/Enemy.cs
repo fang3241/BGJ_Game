@@ -263,6 +263,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Floor"))
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+
     /*
     Vector2Int cektarget() {
         bool aman = true;
